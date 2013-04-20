@@ -1,3 +1,5 @@
+PREFIX?=/usr/local
+
 all: vde-netemu
 
 
@@ -6,3 +8,6 @@ vde-netemu: vde-netemu.o
 
 clean: 
 	rm -f vde-netemu *.o
+
+install: vde-netemu
+	install vde-netemu $(PREFIX)/bin

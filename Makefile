@@ -1,4 +1,4 @@
-PREFIX?=/usr/local
+BIN=$(DESTDIR)/usr/bin
 
 all: vde-netemu
 
@@ -10,4 +10,5 @@ clean:
 	rm -f vde-netemu *.o
 
 install: vde-netemu
-	install vde-netemu $(PREFIX)/bin
+	install -d $(BIN)
+	install vde-netemu $(BIN)

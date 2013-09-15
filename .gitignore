@@ -1,0 +1,6 @@
+/debian/vde-netemu
+/debian/vde-netemu.debhelper.log
+/debian/vde-netemu.substvars
+/.pc
+/vde-netemu
+/vde-netemu.o

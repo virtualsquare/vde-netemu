@@ -77,6 +77,27 @@ struct wirevalue {
   char alg;
 };
 
+struct lost_segments
+{
+
+  unsigned long long ls_segs_no;
+  unsigned long long ls_brsts_no;
+  unsigned long long ls_cur_burst;
+
+  unsigned long long dropped_segments;
+
+};
+
+struct lost_segments lost_segs;
+
+struct recv_segments
+{
+  unsigned long long k_segments;
+  unsigned long long segments;
+};
+
+struct recv_segments recv_segs;
+
 #define LOSS 0
 #define LOSTBURST 1
 #define DELAY 2
@@ -723,9 +744,17 @@ static inline int outpacket(int dir,const unsigned char *buf,int size)
 int writepacket(struct wf_packet *pkt)
 {
   if (pkt->flags & WFP_LOSS) {
-    //fprintf(stderr, "PACKET LOSS ********************\n");
+//  fprintf(stderr, "PACKET LOSS ********************\n");
+    lost_segs.ls_segs_no++;
+    lost_segs.ls_cur_burst++;
     return 0;
   }
+  else if (lost_segs.ls_cur_burst>0)
+  {
+    lost_segs.ls_brsts_no++;
+    lost_segs.ls_cur_burst=0;
+  }
+
   static int max_q = 0;
   if (!pkt->dir && queue_size_out[0] > max_q) { 
     //fprintf(stderr, "%llu, %lu\n", gettimeofdayms(), queue_size_out[0]);
@@ -900,6 +929,7 @@ void handle_packet(struct wf_packet *pkt)
       int drop_tail = max_wirevalue(markov_current, CHANBUFSIZE, pkt_in->dir);
       if (drop_tail > 0 && adv_flow == 0 && drop_tail < queue_size_in[pkt_in->dir]) { 
 //        fprintf(stderr, "Drop Tail. Queue size: %lu, limit: %u\n", queue_size_in[pkt_in->dir], drop_tail);
+	lost_segs.dropped_segments++;
         free(pkt_in);
         times--;
            continue;
@@ -985,6 +1015,15 @@ static int packet_in(int dir)
   oom = 0;
   pkt->next = NULL;
   pkt->dir = dir;
+
+  recv_segs.segments++;
+
+  if (recv_segs.segments>=1000)
+  {
+    recv_segs.segments = recv_segs.segments % 1000;
+    recv_segs.k_segments++;
+  }
+
   if(vdeplug[dir]) {
     n=vde_recv(vdeplug[dir],pkt->payload + 2,BUFSIZE-2,0);
     pkt->payload[0]=n>>8;
@@ -1414,6 +1453,22 @@ static int logout(int fd,char *s)
   return -1;
 }
 
+static int reset_counters(int fd, char *s)
+{
+
+  lost_segs.ls_segs_no=0;
+  lost_segs.ls_brsts_no=0;
+  lost_segs.ls_cur_burst=0;
+
+  lost_segs.dropped_segments=0;
+
+  recv_segs.k_segments=0;
+  recv_segs.segments=0;
+
+  return 0;
+
+}
+
 static int doshutdown(int fd,char *s)
 {
   exit(0);
@@ -1449,6 +1504,8 @@ static int help(int fd,char *s)
   printoutc(fd, "showedges n        markov mode: show edge weights");
   printoutc(fd, "showcurrent        markov mode: show current state");
   printoutc(fd, "markov-debug n     markov mode: set debug level");
+  printoutc(fd, "reset-counters     reset packet counters");
+
   return 0;
 }
 
@@ -1518,6 +1575,13 @@ static int showinfo(int fd,char *s)
   }
   printoutc(fd,"Fifoness %s",(nofifo == 0)?"TRUE":"FALSE");
   printoutc(fd,"Waiting packets in delay queues %d",npq);
+
+  printoutc(fd,"Recv Packets: %llu%03llu", recv_segs.k_segments, recv_segs.segments);
+
+  printoutc(fd,"Lost Packets: %llu Lost Bursts: %llu", lost_segs.ls_segs_no, lost_segs.ls_brsts_no);
+  
+  printoutc(fd,"Dropped (tail) Segments: %llu", lost_segs.dropped_segments);
+
   if (blinksock) {
     blinkmsg[(int)blinkidlen]=0;
     printoutc(fd,"Blink socket: %s",blinksun.sun_path);
@@ -1578,7 +1642,8 @@ static struct comlist {
   {"markov-debug",setmarkov_debug, 0},
   {"red",setred,0},
   {"logout",logout, 0},
-  {"shutdown",doshutdown, 0}
+  {"shutdown",doshutdown, 0},
+  {"reset-counters",reset_counters, 0}
 };
 
 #define NCL sizeof(commandlist)/sizeof(struct comlist)
@@ -1721,6 +1786,16 @@ int main(int argc,char *argv[])
   int option_index;
   int mgmtindex=-1;
   int consoleindex=-1;
+  
+  lost_segs.ls_segs_no=0;
+  lost_segs.ls_brsts_no=0;
+  lost_segs.ls_cur_burst=0;
+
+  lost_segs.dropped_segments=0;
+
+  recv_segs.k_segments=0;
+  recv_segs.segments=0;
+
   static struct option long_options[] = {
     {"help",0 , 0, 'h'},
     {"rcfile", 1, 0, 'f'},

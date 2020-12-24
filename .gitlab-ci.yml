@@ -25,6 +25,9 @@ variables:
         - debchange --newversion "$NETEMU_DEB_VERSION" "New upstream version"
         - debchange --release --distribution "${DISTRIBUTION}" ""
         - dpkg-buildpackage -us -uc
+        - pwd
+        - ls -la .
+        - ls -la ..
         - cp ../vde-netemu_"$NETEMU_DEB_VERSION"* ../../dist/
     artifacts:
         paths:

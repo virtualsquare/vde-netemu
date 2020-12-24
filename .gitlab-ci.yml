@@ -15,6 +15,7 @@ variables:
     before_script:
         - apt-get update
         - apt-get install -y build-essential debhelper devscripts libvdeplug-dev
+        - export EPOCH="1:"
         - export NETEMU_VERSION=20130420
         - export "NETEMU_DEB_VERSION=1:${NETEMU_VERSION}-${DISTRIBUTION}1"
         - mkdir -p build/vde-netemu-"$NETEMU_VERSION" dist
@@ -22,12 +23,9 @@ variables:
         - tar cvfz "build/vde-netemu_${NETEMU_VERSION}.orig.tar.gz" Makefile vde-netemu.c
         - cd build/vde-netemu-"$NETEMU_VERSION"
     script:
-        - debchange --newversion "$NETEMU_DEB_VERSION" "New upstream version"
+        - debchange --newversion "${EPOCH}${NETEMU_DEB_VERSION}" "New upstream version"
         - debchange --release --distribution "${DISTRIBUTION}" ""
         - dpkg-buildpackage -us -uc
-        - pwd
-        - ls -la .
-        - ls -la ..
         - cp ../vde-netemu_"$NETEMU_DEB_VERSION"* ../../dist/
     artifacts:
         paths:

@@ -30,6 +30,7 @@ variables:
     artifacts:
         paths:
             - dist/*
+            - build/*
 
 # Debian 9, stretch, oldstable
 debian-9:

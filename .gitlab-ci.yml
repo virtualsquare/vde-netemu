@@ -20,7 +20,7 @@ variables:
         - export "NETEMU_DEB_VERSION=1:${NETEMU_VERSION}-${DISTRIBUTION}1"
         - mkdir -p build/vde-netemu-"$NETEMU_VERSION" dist
         - cp -r debian/ Makefile vde-netemu.c build/vde-netemu-"$NETEMU_VERSION"
-        - tar cvfz "build/vde-netemu_${NETEMU_VERSION}.orig.tar.gz" Makefile vde-netemu.c
+        - tar cvfz "build/vde-netemu_${EPOCH}${NETEMU_VERSION}.orig.tar.gz" Makefile vde-netemu.c
         - cd build/vde-netemu-"$NETEMU_VERSION"
     script:
         - debchange --newversion "${EPOCH}${NETEMU_DEB_VERSION}" "New upstream version"

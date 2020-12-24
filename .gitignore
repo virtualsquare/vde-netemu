@@ -1,9 +1,15 @@
+# Vim temporary files
+.*.sw?
+
+# Debian package build artifacts
+/debian/.debhelper/
+/debian/debhelper-build-stamp
+/debian/files
 /debian/vde-netemu
 /debian/vde-netemu.debhelper.log
 /debian/vde-netemu.substvars
-/debian/files
-/debian/.debhelper/
-/debian/debhelper-build-stamp
+
+# Other
 /.pc
 /vde-netemu
 /vde-netemu.o

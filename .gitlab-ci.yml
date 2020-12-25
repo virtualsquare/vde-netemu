@@ -27,7 +27,7 @@ variables:
         # -us: Do not sign the source package.
         # -uc: Do not sign the .buildinfo and .changes files.
         # -sd: Forces the exclusion of the original source and includes only the diff.
-        - dpkg-buildpackage -us -uc -sa
+        - dpkg-buildpackage -us -uc
     artifacts:
         paths:
             - build/*

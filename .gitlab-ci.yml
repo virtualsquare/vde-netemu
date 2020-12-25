@@ -17,12 +17,11 @@ variables:
         - apt-get install -y build-essential debhelper devscripts libvdeplug-dev
         - export EPOCH="1:"
         - export NETEMU_VERSION=20130420
-        - export "NETEMU_DEB_VERSION=1:${NETEMU_VERSION}-${DISTRIBUTION}1"
         - mkdir -p build/vde-netemu-"$NETEMU_VERSION"
         - cp -r debian/ Makefile vde-netemu.c build/vde-netemu-"$NETEMU_VERSION"
-        - tar cvfz "build/vde-netemu_${EPOCH}${NETEMU_VERSION}.orig.tar.gz" Makefile vde-netemu.c
+        - tar cvfz "build/vde-netemu_${NETEMU_VERSION}.orig.tar.gz" Makefile vde-netemu.c
         - cd build/vde-netemu-"$NETEMU_VERSION"
-        - debchange --newversion "${EPOCH}${NETEMU_DEB_VERSION}" "New upstream version"
+        - debchange --newversion "${EPOCH}${NETEMU_VERSION}-${DISTRIBUTION}1" "New upstream version"
         - debchange --release --distribution "${DISTRIBUTION}" ""
     script:
         # -us: Do not sign the source package.
@@ -37,9 +36,6 @@ variables:
 debian-9:
     <<: *build-deb
     image: debian:stretch
-    script:
-        # -sa: Forces the inclusion of the original source.
-        - dpkg-buildpackage -us -uc -sa
     variables:
         DISTRIBUTION: stretch
 

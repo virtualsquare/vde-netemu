@@ -22,10 +22,13 @@ variables:
         - cp -r debian/ Makefile vde-netemu.c build/vde-netemu-"$NETEMU_VERSION"
         - tar cvfz "build/vde-netemu_${EPOCH}${NETEMU_VERSION}.orig.tar.gz" Makefile vde-netemu.c
         - cd build/vde-netemu-"$NETEMU_VERSION"
-    script:
         - debchange --newversion "${EPOCH}${NETEMU_DEB_VERSION}" "New upstream version"
         - debchange --release --distribution "${DISTRIBUTION}" ""
-        - dpkg-buildpackage -us -uc
+    script:
+        # -us: Do not sign the source package.
+        # -uc: Do not sign the .buildinfo and .changes files.
+        # -sd: Forces the exclusion of the original source and includes only the diff.
+        - dpkg-buildpackage -us -uc -sd
     artifacts:
         paths:
             - build/*
@@ -34,6 +37,9 @@ variables:
 debian-9:
     <<: *build-deb
     image: debian:stretch
+    script:
+        # -sa: Forces the inclusion of the original source.
+        - dpkg-buildpackage -us -uc -sa
     variables:
         DISTRIBUTION: stretch
 

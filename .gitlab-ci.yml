@@ -18,7 +18,7 @@ variables:
         - export EPOCH="1:"
         - export NETEMU_VERSION=20130420
         - export "NETEMU_DEB_VERSION=1:${NETEMU_VERSION}-${DISTRIBUTION}1"
-        - mkdir -p build/vde-netemu-"$NETEMU_VERSION" dist
+        - mkdir -p build/vde-netemu-"$NETEMU_VERSION"
         - cp -r debian/ Makefile vde-netemu.c build/vde-netemu-"$NETEMU_VERSION"
         - tar cvfz "build/vde-netemu_${EPOCH}${NETEMU_VERSION}.orig.tar.gz" Makefile vde-netemu.c
         - cd build/vde-netemu-"$NETEMU_VERSION"
@@ -26,10 +26,8 @@ variables:
         - debchange --newversion "${EPOCH}${NETEMU_DEB_VERSION}" "New upstream version"
         - debchange --release --distribution "${DISTRIBUTION}" ""
         - dpkg-buildpackage -us -uc
-        - cp ../vde-netemu_"$NETEMU_DEB_VERSION"* ../../dist/
     artifacts:
         paths:
-            - dist/*
             - build/*
 
 # Debian 9, stretch, oldstable

@@ -24,10 +24,12 @@ variables:
         - debchange --newversion "${EPOCH}${NETEMU_VERSION}-${DISTRIBUTION}1" "New upstream version"
         - debchange --release --distribution "${DISTRIBUTION}" ""
     script:
+        # -b: Build the binary package only to avoid conflicts in the source
+        #   package in different distributions.
         # -us: Do not sign the source package.
         # -uc: Do not sign the .buildinfo and .changes files.
         # -sd: Forces the exclusion of the original source and includes only the diff.
-        - dpkg-buildpackage -us -uc
+        - dpkg-buildpackage -b -us -uc -sa
     artifacts:
         paths:
             - build/*

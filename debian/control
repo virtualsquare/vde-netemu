@@ -1,3 +1,13 @@
+Source: vde-netemu
+Section: net
+Priority: extra
+Maintainer: Marco Giusti <marco.giusti3@studio.unibo.it>
+Build-Depends: debhelper (>= 8.0.0), build-essential, libvdeplug-dev | libvdeplug2-dev
+Standards-Version: 3.9.3
+Homepage: https://github.com/mgiusti/vde-netemu
+Vcs-Git: https://github.com/mgiusti/vde-netemu.git
+Vcs-Browser: https://github.com/mgiusti/vde-netemu
+
 Package: vde-netemu
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}

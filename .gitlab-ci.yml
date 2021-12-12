@@ -89,3 +89,17 @@ ubuntu-20.04:
     image: ubuntu:focal
     variables:
         DISTRIBUTION: focal
+
+# Ubuntu 21.04, hirsute
+ubuntu-21.04:
+    <<: *build-deb
+    image: ubuntu:21.04
+    variables:
+        DISTRIBUTION: hirsute
+
+# Ubuntu 21.10, impish
+ubuntu-21.10:
+    <<: *build-deb
+    image: ubuntu:21.10
+    variables:
+        DISTRIBUTION: impish

@@ -34,26 +34,33 @@ variables:
         paths:
             - build/*
 
-# Debian 9, stretch, oldstable
+# Debian 9, stretch, oldoldstable
 debian-9:
     <<: *build-deb
     image: debian:stretch
     variables:
         DISTRIBUTION: stretch
 
-# Debian 10, buster, stable
+# Debian 10, buster, oldstable
 debian-10:
     <<: *build-deb
     image: debian:buster
     variables:
         DISTRIBUTION: buster
 
-# Debian 11, bullseye, testing
+# Debian 11, bullseye, stable
 debian-11:
     <<: *build-deb
     image: debian:bullseye
     variables:
         DISTRIBUTION: bullseye
+
+# Debian testing, bookworm
+debian-testing:
+    <<: *build-deb
+    image: debian:testing
+    variables:
+        DISTRIBUTION: bookworm
 
 # Debian unstable, sid
 debian-sid:

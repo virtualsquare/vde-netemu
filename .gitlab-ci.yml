@@ -1,3 +1,6 @@
+# Use the job name as the distribution. Valid names are stretch, buster,
+# bionic, etc. Everything else is an invalid job name.
+
 stages:
     - build
 
@@ -12,18 +15,18 @@ variables:
 #   $ dpkg-parsechangelog | sed -rne 's/^Version: ([0-9.]+)[-+].*$$/\1/p'
 .build-template: &build-deb
     stage: build
-    before_script:
+    script:
+        - DISTRIBUTION=$CI_JOB_NAME
         - apt-get update
         - apt-get install -y build-essential debhelper devscripts libvdeplug-dev
-        - export EPOCH="1:"
+        - export EPOCH=1
         - export NETEMU_VERSION=20130420
         - mkdir -p build/vde-netemu-"$NETEMU_VERSION"
         - cp -r debian/ Makefile vde-netemu.c build/vde-netemu-"$NETEMU_VERSION"
         - tar cvfz "build/vde-netemu_${NETEMU_VERSION}.orig.tar.gz" Makefile vde-netemu.c
         - cd build/vde-netemu-"$NETEMU_VERSION"
-        - debchange --newversion "${EPOCH}${NETEMU_VERSION}-${DISTRIBUTION}1" "New upstream version"
+        - debchange --newversion "${EPOCH}:${NETEMU_VERSION}-${DISTRIBUTION}1" "New upstream version"
         - debchange --release --distribution "${DISTRIBUTION}" ""
-    script:
         # -b: Build the binary package only to avoid conflicts in the source
         #   package in different distributions.
         # -us: Do not sign the source package.
@@ -34,58 +37,52 @@ variables:
         paths:
             - build/*
 
-# Debian 9, stretch, oldstable
-debian-9:
+# Debian 9, oldoldstable
+stretch:
     <<: *build-deb
     image: debian:stretch
-    variables:
-        DISTRIBUTION: stretch
 
-# Debian 10, buster, stable
-debian-10:
+# Debian 10, oldstable
+buster:
     <<: *build-deb
     image: debian:buster
-    variables:
-        DISTRIBUTION: buster
 
-# Debian 11, bullseye, testing
-debian-11:
+# Debian 11, stable
+bullseye:
     <<: *build-deb
     image: debian:bullseye
-    variables:
-        DISTRIBUTION: bullseye
 
-# Debian unstable, sid
-debian-sid:
+# Debian 12, testing
+bookworm:
+    <<: *build-deb
+    image: debian:bookworm
+
+# Debian unstable
+sid:
     <<: *build-deb
     image: debian:sid
-    variables:
-        DISTRIBUTION: sid
 
-# Ubuntu 14.04 LTS, trusty
-ubuntu-14.04:
+# Ubuntu 14.04 LTS
+trusty:
     <<: *build-deb
     image: ubuntu:trusty
-    variables:
-        DISTRIBUTION: trusty
 
-# Ubuntu 16.04 LTS, xenial
-ubuntu-16.04:
+# Ubuntu 16.04 LTS
+xenial:
     <<: *build-deb
     image: ubuntu:xenial
-    variables:
-        DISTRIBUTION: xenial
 
-# Ubuntu 18.04 LTS, bionic
-ubuntu-18.04:
+# Ubuntu 18.04 LTS
+bionic:
     <<: *build-deb
     image: ubuntu:bionic
-    variables:
-        DISTRIBUTION: bionic
 
-# Ubuntu 20.04 LTS, focal
-ubuntu-20.04:
+# Ubuntu 20.04 LTS
+focal:
     <<: *build-deb
     image: ubuntu:focal
-    variables:
-        DISTRIBUTION: focal
+
+# Ubuntu 22.04 LTS
+jammy:
+    <<: *build-deb
+    image: ubuntu:jammy

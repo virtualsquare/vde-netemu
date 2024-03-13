@@ -10,7 +10,7 @@ variables:
     DISTRIBUTION: $CI_JOB_NAME
     DISTVER: 3
     DEBIAN_REVISION: -${DISTRIBUTION}${DISTVER}
-    EPOCH: 1:
+    EPOCH: "1:"
     UPSTREAM_VERSION: 20130420
 
 # vde-netemu changes rarely. Use a fixed version and change the building

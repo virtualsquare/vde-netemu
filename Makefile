@@ -11,3 +11,6 @@ clean:
 
 install: vde-netemu
 	install $(BIN_NAME) $(PREFIX)/bin
+
+debug:
+	$(CC) -g $(BIN_NAME).c -L$(PREFIX)/lib -I$(PREFIX)/include -lvdeplug -lm 

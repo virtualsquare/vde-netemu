@@ -304,7 +304,7 @@ static void pkt_enqueue_in(struct wf_packet *pkt)
   struct wf_packet *q = wf_queue_in[pkt->dir];
   pkt->next = NULL;
   queue_size_in[pkt->dir] += pkt->size;
-  if (!q) {
+  if (!q) {                             
     wf_queue_in[pkt->dir] = pkt;
     wf_queue_in_tail[pkt->dir] = pkt;
     return;
@@ -409,7 +409,7 @@ static int process_queue_in(unsigned long long now)
         unsigned long long delta = now - last_in[i];
         unsigned long long deadline = (1000 * mtu[i]) / bandval;
 
-        /* Recalculate maximum packet lenght if needed. */
+        /* Recalculate maximum packet length if needed. */
         if (mtu[i] < pkt->size)
           mtu[i] = pkt->size;
 
@@ -495,7 +495,7 @@ static inline void markov_node_free(struct markov_node *old)
   free(old);
 }
 
-static void markov_compute(i)
+static void markov_compute(int i)
 {
   int j;
   ADJMAP(i,i)=100.0;
@@ -1015,6 +1015,7 @@ static int packet_in(int dir)
   oom = 0;
   pkt->next = NULL;
   pkt->dir = dir;
+  pkt->dequeue_time = 0U;
 
   recv_segs.segments++;
 

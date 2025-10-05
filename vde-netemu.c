@@ -304,7 +304,7 @@ static void pkt_enqueue_in(struct wf_packet *pkt)
   struct wf_packet *q = wf_queue_in[pkt->dir];
   pkt->next = NULL;
   queue_size_in[pkt->dir] += pkt->size;
-  if (!q) {                             
+  if (!q) {
     wf_queue_in[pkt->dir] = pkt;
     wf_queue_in_tail[pkt->dir] = pkt;
     return;
@@ -1261,9 +1261,9 @@ static char prompt[]="\nVDEwf$ ";
 static int newmgmtconn(int fd,struct pollfd *pfd,int nfds)
 {
   int new;
-  unsigned int len;
   char buf[MAXCMD];
   struct sockaddr addr;
+  unsigned int len = sizeof(addr);
   new = accept(fd, &addr, &len);
   if(new < 0){
     printlog(LOG_WARNING,"mgmt accept %s",strerror(errno));

@@ -1,16 +1,14 @@
-PREFIX=/usr/local
-BIN_NAME=vde-netemu
+BIN=$(DESTDIR)/usr/bin
 
 all: vde-netemu
 
+
 vde-netemu: vde-netemu.o
-	$(CC) -g -o $(BIN_NAME) -L$(PREFIX)/lib -I$(PREFIX)/include $(BIN_NAME).o -lvdeplug -lm
+	$(CC) -o vde-netemu vde-netemu.o -lvdeplug -lm
 
 clean: 
-	rm -f $(BIN_NAME) *.o
+	rm -f vde-netemu *.o
 
 install: vde-netemu
-	install $(BIN_NAME) $(PREFIX)/bin
-
-debug:
-	$(CC) -g $(BIN_NAME).c -L$(PREFIX)/lib -I$(PREFIX)/include -lvdeplug -lm 
+	install -d $(BIN)
+	install vde-netemu $(BIN)

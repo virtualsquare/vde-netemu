@@ -8,10 +8,10 @@ variables:
     DEBIAN_FRONTEND: noninteractive
     DEBEMAIL: Marco Giusti <marco.giusti3@studio.unibo.it>
     DISTRIBUTION: $CI_JOB_NAME
-    DISTVER: 4
+    DISTVER: 1
     DEBIAN_REVISION: -${DISTRIBUTION}${DISTVER}
     EPOCH: "1:"
-    UPSTREAM_VERSION: 20130420
+    UPSTREAM_VERSION: 20251028
 
 # vde-netemu changes rarely. Use a fixed version and change the building
 # procedure once there is the need for it. Example of command to get the
@@ -50,22 +50,17 @@ variables:
         paths:
             - build/*
 
-# Debian 10, oldstable
-buster:
-    <<: *build-deb
-    image: debian:buster
-
-# Debian 11, oldstable
+# Debian 11
 bullseye:
     <<: *build-deb
     image: debian:bullseye
 
-# Debian 13, stable
+# Debian 12
 bookworm:
     <<: *build-deb
     image: debian:bookworm
 
-# Debian 13, testing
+# Debian 13
 trixie:
     <<: *build-deb
     image: debian:trixie
@@ -94,3 +89,13 @@ jammy:
 noble:
     <<: *build-deb
     image: ubuntu:noble
+
+# Ubuntu 25.04
+plucky:
+    <<: *build-deb
+    image: ubuntu:plucky
+
+# Ubuntu 25.10
+questing:
+    <<: *build-deb
+    image: ubuntu:questing

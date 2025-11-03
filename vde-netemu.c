@@ -1256,8 +1256,9 @@ static int openmgmt(char *mgmt)
   return mgmtconnfd;
 }
 
-static char header[]="\nVDE wirefilter V.%s\n(C) R.Davoli 2005,2006 - GPLv2\n";
-static char prompt[]="\nVDEwf$ ";
+static char header[]="\nNetemu v%s (fork from VDE wirefilter by R.Davoli 2005,2006)\nF.Apollonio, N.Tentoni 2025 - GPLv3\n";
+static char prompt[]="\nNetemu$ ";
+static char version[]="2.0.0";
 static int newmgmtconn(int fd,struct pollfd *pfd,int nfds)
 {
   int new;
@@ -1270,7 +1271,7 @@ static int newmgmtconn(int fd,struct pollfd *pfd,int nfds)
     return nfds;
   }
   if (nfds < NPFD) {
-    snprintf(buf,MAXCMD,header,"");
+    snprintf(buf,MAXCMD,header,version);
     write(new,buf,strlen(buf));
     write(new,prompt,strlen(prompt));
     pfd[nfds].fd=new;
